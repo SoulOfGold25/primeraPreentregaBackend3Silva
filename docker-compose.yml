@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+    mongo:
+        image: mongo
+        container_name: adoptme_mongo
+        ports:
+            - "27017:27017"
+        volumes:
+            - mongo_data:/data/db
+
+    app:
+        build: .
+        container_name: adoptme_app
+        ports:
+            - "8080:8080"
+        environment:
+            - PORT=8080
+            - MONGO_URI=mongodb://mongo:27017/adoptmeTest
+            - NODE_ENV=development
+        volumes:
+            # Solo montamos código fuente y docs, no node_modules
+            - ./src:/app/src
+            - ./docs:/app/docs
+        depends_on:
+            - mongo
+        # Deja que use el CMD del Dockerfile, o forzamos dev si prefieres
+        command: npm run dev
+
+volumes:
+    mongo_data:

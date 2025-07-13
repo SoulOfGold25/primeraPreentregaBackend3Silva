@@ -1,0 +1,298 @@
+openapi: 3.0.0
+info:
+    title: Adoptme API
+    version: 1.0.0
+    description: API para gestionar usuarios, mascotas, adopciones y sesiones.
+servers:
+    - url: http://localhost:8080/api
+
+paths:
+    /users:
+        get:
+            summary: Obtener todos los usuarios
+            tags: [Users]
+            responses:
+                "200":
+                    description: Lista de usuarios obtenida correctamente
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/User"
+
+    /users/{uid}:
+        get:
+            summary: Obtener un usuario por ID
+            tags: [Users]
+            parameters:
+                - in: path
+                  name: uid
+                  schema:
+                      type: string
+                  required: true
+                  description: ID del usuario
+            responses:
+                "200":
+                    description: Usuario encontrado
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/User"
+        put:
+            summary: Actualizar un usuario por ID
+            tags: [Users]
+            parameters:
+                - in: path
+                  name: uid
+                  schema:
+                      type: string
+                  required: true
+                  description: ID del usuario
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/User"
+            responses:
+                "200":
+                    description: Usuario actualizado
+        delete:
+            summary: Eliminar un usuario por ID
+            tags: [Users]
+            parameters:
+                - in: path
+                  name: uid
+                  schema:
+                      type: string
+                  required: true
+                  description: ID del usuario
+            responses:
+                "200":
+                    description: Usuario eliminado
+
+    /pets:
+        get:
+            summary: Obtener todas las mascotas
+            tags: [Pets]
+            responses:
+                "200":
+                    description: Lista de mascotas
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Pet"
+        post:
+            summary: Crear una nueva mascota
+            tags: [Pets]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Pet"
+            responses:
+                "201":
+                    description: Mascota creada
+
+    /pets/withimage:
+        post:
+            summary: Crear mascota con imagen
+            tags: [Pets]
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                image:
+                                    type: string
+                                    format: binary
+            responses:
+                "201":
+                    description: Mascota con imagen creada
+
+    /pets/{pid}:
+        put:
+            summary: Actualizar mascota por ID
+            tags: [Pets]
+            parameters:
+                - in: path
+                  name: pid
+                  schema:
+                      type: string
+                  required: true
+                  description: ID de la mascota
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/Pet"
+            responses:
+                "200":
+                    description: Mascota actualizada
+        delete:
+            summary: Eliminar mascota por ID
+            tags: [Pets]
+            parameters:
+                - in: path
+                  name: pid
+                  schema:
+                      type: string
+                  required: true
+                  description: ID de la mascota
+            responses:
+                "200":
+                    description: Mascota eliminada
+
+    /adoptions:
+        get:
+            summary: Obtener todas las adopciones
+            tags: [Adoptions]
+            responses:
+                "200":
+                    description: Lista de adopciones
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/Adoption"
+
+    /adoptions/{aid}:
+        get:
+            summary: Obtener una adopción por ID
+            tags: [Adoptions]
+            parameters:
+                - in: path
+                  name: aid
+                  schema:
+                      type: string
+                  required: true
+                  description: ID de la adopción
+            responses:
+                "200":
+                    description: Adopción encontrada
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/Adoption"
+
+    /adoptions/{uid}/{pid}:
+        post:
+            summary: Crear una adopción entre usuario y mascota
+            tags: [Adoptions]
+            parameters:
+                - in: path
+                  name: uid
+                  schema:
+                      type: string
+                  required: true
+                  description: ID del usuario
+                - in: path
+                  name: pid
+                  schema:
+                      type: string
+                  required: true
+                  description: ID de la mascota
+            responses:
+                "201":
+                    description: Adopción creada
+
+    /sessions/register:
+        post:
+            summary: Registrar nuevo usuario
+            tags: [Sessions]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/User"
+            responses:
+                "201":
+                    description: Usuario registrado
+
+    /sessions/login:
+        post:
+            summary: Iniciar sesión
+            tags: [Sessions]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+                                password:
+                                    type: string
+            responses:
+                "200":
+                    description: Login exitoso
+
+    /sessions/current:
+        get:
+            summary: Obtener usuario actual autenticado
+            tags: [Sessions]
+            responses:
+                "200":
+                    description: Usuario actual
+
+    /sessions/unprotectedLogin:
+        get:
+            summary: Login sin protección
+            tags: [Sessions]
+            responses:
+                "200":
+                    description: Login sin protección
+
+    /sessions/unprotectedCurrent:
+        get:
+            summary: Obtener usuario actual sin protección
+            tags: [Sessions]
+            responses:
+                "200":
+                    description: Usuario actual sin protección
+
+components:
+    schemas:
+        User:
+            type: object
+            properties:
+                name:
+                    type: string
+                    example: Juan
+                email:
+                    type: string
+                    example: juan@mail.com
+                role:
+                    type: string
+                    example: admin
+        Pet:
+            type: object
+            properties:
+                name:
+                    type: string
+                    example: Firulais
+                species:
+                    type: string
+                    example: perro
+                age:
+                    type: integer
+                    example: 3
+        Adoption:
+            type: object
+            properties:
+                userId:
+                    type: string
+                    example: 60df6c2fd75e2a3c3c35a9a0
+                petId:
+                    type: string
+                    example: 60df6c2fd75e2a3c3c35a9a1
