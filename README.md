@@ -10,7 +10,6 @@ Sistema de gestión de adopciones de mascotas, desarrollado con Node.js, Express
 -   MongoDB + Mongoose
 -   Swagger (documentación)
 -   Docker + Docker Compose
--   Babel (ESModules)
 -   Mocha + Sinon + Chai (tests)
 
 ---
@@ -30,7 +29,7 @@ cd primeraPreentregaBackend3Silva
 npm install
 ```
 
-3. Crear un archivo `.env` (opcional):
+3. Crear un archivo `.env`:
 
 ```env
 PORT=8080
@@ -51,13 +50,13 @@ npm run dev
 1. Construir y levantar los servicios:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
-2. Accede a la API en:  
+2. Acceder a la API:  
    👉 `http://localhost:8080/`
 
-3. Accede a la documentación Swagger en:  
+3. Acceder a la documentación Swagger:  
    👉 `http://localhost:8080/docs`
 
 ---
@@ -74,8 +73,8 @@ src/
 ├── dao/                  # DAO: acceso directo a Mongo
 ├── middlewares/          # Logger, manejo de errores
 ├── models/               # Esquemas de Mongoose
-├── test/                 # Pruebas unitarias con Mocha
 └── docs/swagger.yaml     # Documentación de la API
+test/                     # Pruebas unitarias con Mocha
 ```
 
 ---
@@ -94,7 +93,7 @@ npm test
 
 -   `GET /api/users`
 -   `GET /api/pets`
--   `POST /api/adoptions`
+-   `POST /api/adoptions/:uid/:pid`
 -   `POST /api/sessions/login`
 -   `GET /docs` → documentación Swagger
 
@@ -102,9 +101,7 @@ npm test
 
 ## 📝 Autor
 
-Desarrollado por [Tu Nombre o Alias]  
-Universidad / Curso: [Nombre del ramo o institución]  
-Año: 2025
+Desarrollado por 221Dev
 
 ---
 

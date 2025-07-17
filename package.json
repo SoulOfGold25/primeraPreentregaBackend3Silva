@@ -5,9 +5,9 @@
     "main": "index.js",
     "type": "module",
     "scripts": {
-        "start": "node src/server.js",
-        "dev": "nodemon src/server.js",
-        "test": "mocha --require @babel/register 'test/**/*.test.js' --timeout 10000"
+        "start": "node ./src/server.js",
+        "dev": "nodemon ./src/server.js",
+        "test": "mocha 'test/**/*.test.js'"
     },
     "keywords": [],
     "author": "",
@@ -26,9 +26,6 @@
         "yamljs": "^0.3.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.28.0",
-        "@babel/preset-env": "^7.28.0",
-        "@babel/register": "^7.27.1",
         "chai": "^4.5.0",
         "chai-http": "^5.1.2",
         "mocha": "^10.8.2",

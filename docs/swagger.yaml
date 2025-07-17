@@ -1,10 +1,11 @@
 openapi: 3.0.0
 info:
-    title: Adoptme API
+    title: AdoptMe API
     version: 1.0.0
-    description: API para gestionar usuarios, mascotas, adopciones y sesiones.
+    description: API para gestión de usuarios, mascotas, adopciones y sesiones
 servers:
     - url: http://localhost:8080/api
+      description: Servidor local de desarrollo
 
 paths:
     /users:
@@ -13,13 +14,7 @@ paths:
             tags: [Users]
             responses:
                 "200":
-                    description: Lista de usuarios obtenida correctamente
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: "#/components/schemas/User"
+                    description: Lista de usuarios
 
     /users/{uid}:
         get:
@@ -35,12 +30,8 @@ paths:
             responses:
                 "200":
                     description: Usuario encontrado
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/User"
         put:
-            summary: Actualizar un usuario por ID
+            summary: Actualizar usuario por ID
             tags: [Users]
             parameters:
                 - in: path
@@ -59,7 +50,7 @@ paths:
                 "200":
                     description: Usuario actualizado
         delete:
-            summary: Eliminar un usuario por ID
+            summary: Eliminar usuario por ID
             tags: [Users]
             parameters:
                 - in: path
@@ -79,12 +70,6 @@ paths:
             responses:
                 "200":
                     description: Lista de mascotas
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: "#/components/schemas/Pet"
         post:
             summary: Crear una nueva mascota
             tags: [Pets]
@@ -118,7 +103,7 @@ paths:
 
     /pets/{pid}:
         put:
-            summary: Actualizar mascota por ID
+            summary: Actualizar mascota
             tags: [Pets]
             parameters:
                 - in: path
@@ -137,7 +122,7 @@ paths:
                 "200":
                     description: Mascota actualizada
         delete:
-            summary: Eliminar mascota por ID
+            summary: Eliminar mascota
             tags: [Pets]
             parameters:
                 - in: path
@@ -157,16 +142,10 @@ paths:
             responses:
                 "200":
                     description: Lista de adopciones
-                    content:
-                        application/json:
-                            schema:
-                                type: array
-                                items:
-                                    $ref: "#/components/schemas/Adoption"
 
     /adoptions/{aid}:
         get:
-            summary: Obtener una adopción por ID
+            summary: Obtener adopción por ID
             tags: [Adoptions]
             parameters:
                 - in: path
@@ -178,14 +157,10 @@ paths:
             responses:
                 "200":
                     description: Adopción encontrada
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/Adoption"
 
     /adoptions/{uid}/{pid}:
         post:
-            summary: Crear una adopción entre usuario y mascota
+            summary: Crear adopción
             tags: [Adoptions]
             parameters:
                 - in: path
@@ -206,45 +181,25 @@ paths:
 
     /sessions/register:
         post:
-            summary: Registrar nuevo usuario
+            summary: Registrar usuario
             tags: [Sessions]
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/User"
             responses:
                 "201":
                     description: Usuario registrado
-
     /sessions/login:
         post:
             summary: Iniciar sesión
             tags: [Sessions]
-            requestBody:
-                required: true
-                content:
-                    application/json:
-                        schema:
-                            type: object
-                            properties:
-                                email:
-                                    type: string
-                                password:
-                                    type: string
             responses:
                 "200":
                     description: Login exitoso
-
     /sessions/current:
         get:
-            summary: Obtener usuario actual autenticado
+            summary: Obtener usuario actual
             tags: [Sessions]
             responses:
                 "200":
                     description: Usuario actual
-
     /sessions/unprotectedLogin:
         get:
             summary: Login sin protección
@@ -252,47 +207,88 @@ paths:
             responses:
                 "200":
                     description: Login sin protección
-
     /sessions/unprotectedCurrent:
         get:
-            summary: Obtener usuario actual sin protección
+            summary: Usuario sin protección
             tags: [Sessions]
             responses:
                 "200":
-                    description: Usuario actual sin protección
+                    description: Usuario sin protección
+
+    /mocks/mockingpets:
+        get:
+            summary: Generar mocks de mascotas
+            tags: [Mocks]
+            responses:
+                "200":
+                    description: Lista de mocks generados
+    /mocks/mockingusers:
+        get:
+            summary: Generar mocks de usuarios
+            tags: [Mocks]
+            responses:
+                "200":
+                    description: Lista de mocks generados
+    /mocks/generateData:
+        post:
+            summary: Generar usuarios y mascotas en DB
+            tags: [Mocks]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                users:
+                                    type: integer
+                                pets:
+                                    type: integer
+            responses:
+                "200":
+                    description: Datos insertados
+
+    /loggerTest:
+        get:
+            summary: Generar logs de prueba
+            tags: [Logger]
+            responses:
+                "200":
+                    description: Logs generados
 
 components:
     schemas:
         User:
             type: object
             properties:
-                name:
+                first_name:
                     type: string
-                    example: Juan
+                last_name:
+                    type: string
                 email:
                     type: string
-                    example: juan@mail.com
+                password:
+                    type: string
                 role:
                     type: string
-                    example: admin
         Pet:
             type: object
             properties:
                 name:
                     type: string
-                    example: Firulais
-                species:
+                specie:
                     type: string
-                    example: perro
-                age:
-                    type: integer
-                    example: 3
+                birthDate:
+                    type: string
+                    format: date
+                adopted:
+                    type: boolean
+                image:
+                    type: string
         Adoption:
             type: object
             properties:
-                userId:
+                owner:
                     type: string
-                    example: 60df6c2fd75e2a3c3c35a9a0
-                petId:
+                pet:
                     type: string
-                    example: 60df6c2fd75e2a3c3c35a9a1
